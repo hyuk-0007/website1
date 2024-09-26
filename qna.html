@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q&A 게시판</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+    .form-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .form-group label {
+      width: 110px;
+      margin-right: 10px;
+      text-align: right;
+    }
+    input[type="text"]#nickname {
+      width: 30%;
+    }
+    input[type="text"]#title {
+      width: 50%;
+    }
+    textarea#question {
+      width: 50%;
+      height: 200px; /* Adjusted height */
+    }
+    input, textarea {
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 25px;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 6px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      background: white;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      cursor: pointer; /* Change cursor to indicate clickable items */
+    }
+    .timestamp {
+      font-size: 0.9em;
+      color: gray;
+    }
+    .question-content {
+      margin-top: 5px;
+      padding: 5px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #f1f1f1;
+      display: none; /* Initially hidden */
+    }
+    .edit-delete-buttons {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>질문 등록</h1>
+  
+  <div class="form-group">
+    <label for="nickname">아이디/닉네임:</label>
+    <input type="text" id="nickname" placeholder="아이디/닉네임을 입력하세요." />
+  </div>
+  <div class="form-group">
+    <label for="title">제목:</label>
+    <input type="text" id="title" placeholder="제목을 입력하세요." />
+  </div>
+  <div class="form-group">
+    <label for="question">질문 내용:</label>
+    <textarea id="question" placeholder="질문을 입력하세요."></textarea>
+  </div>
+  
+  <label>
+    <input type="checkbox" id="privateCheckbox"> 비밀 질문으로 설정
+  </label>
+  <button id="submitBtn">등록</button>
+
+  <h2>질문 목록</h2>
+  <ul id="questionList"></ul>
+
+  <script>
+    const questions = [];
+    let isEditing = false;
+    let editingIndex = -1;
+
+    document.getElementById('submitBtn').addEventListener('click', function() {
+      const nickname = document.getElementById('nickname').value.trim();
+      const title = document.getElementById('title').value.trim();
+      const questionText = document.getElementById('question').value.trim();
+      const isPrivate = document.getElementById('privateCheckbox').checked;
+
+      // Validate input
+      if (nickname === '' || title === '' || questionText === '') {
+        alert('아이디, 제목 및 질문 내용을 입력하세요.');
+        return;
+      }
+
+      // If editing, ask for confirmation with the edit prompt
+      if (isEditing) {
+        const confirmation = confirm('이렇게 수정하면 될까요?');
+        if (confirmation) {
+          questions[editingIndex] = { nickname, title, text: questionText, private: isPrivate, time: questions[editingIndex].time };
+          clearInputFields();
+          displayQuestions();
+          isEditing = false;
+          editingIndex = -1;
+        }
+      } else {
+        // Confirm before registering the question
+        const confirmation = confirm('등록하시겠습니까?');
+        if (confirmation) {
+          const timestamp = new Date().toLocaleString();
+          questions.push({ nickname, title, text: questionText, time: timestamp, private: isPrivate });
+          clearInputFields();
+          displayQuestions();
+        }
+      }
+    });
+
+    function clearInputFields() {
+      document.getElementById('nickname').value = '';
+      document.getElementById('title').value = '';
+      document.getElementById('question').value = '';
+      document.getElementById('privateCheckbox').checked = false;
+    }
+
+    function displayQuestions() {
+      const questionList = document.getElementById('questionList');
+      questionList.innerHTML = '';
+
+      questions.forEach((question, index) => {
+        const li = document.createElement('li');
+
+        // Create a title element
+        const titleElement = document.createElement('strong');
+        titleElement.innerHTML = `${index + 1}. ${question.nickname}: ${question.title}${question.private ? ' (비밀 질문)' : ''}`;
+        titleElement.style.display = 'block'; // Ensure the title is block for better click area
+
+        // Create a timestamp element
+        const timestampElement = document.createElement('span');
+        timestampElement.className = 'timestamp';
+        timestampElement.innerHTML = `(${question.time})`;
+
+        // Create the question content
+        const contentElement = document.createElement('div');
+        contentElement.className = 'question-content';
+        contentElement.innerHTML = question.text;
+
+        // Create edit and delete buttons
+        const editDeleteDiv = document.createElement('div');
+        editDeleteDiv.className = 'edit-delete-buttons';
+
+        const editButton = document.createElement('button');
+        editButton.innerText = '수정';
+        editButton.addEventListener('click', (e) => {
+          e.stopPropagation(); // Prevent triggering the title click event
+          editQuestion(index);
+        });
+
+        const deleteButton = document.createElement('button');
+        deleteButton.innerText = '삭제';
+        deleteButton.style.marginLeft = '10px';
+        deleteButton.addEventListener('click', (e) => {
+          e.stopPropagation(); // Prevent triggering the title click event
+          deleteQuestion(index);
+        });
+
+        // Append the title and timestamp to the list item
+        li.appendChild(titleElement);
+        li.appendChild(timestampElement);
+        li.appendChild(contentElement);
+        editDeleteDiv.appendChild(editButton);
+        editDeleteDiv.appendChild(deleteButton);
+        li.appendChild(editDeleteDiv);
+
+        // Add click event to the title to toggle question content
+        titleElement.addEventListener('click', () => {
+          contentElement.style.display = contentElement.style.display === 'none' ? 'block' : 'none';
+        });
+
+        questionList.appendChild(li);
+      });
+    }
+
+    function editQuestion(index) {
+      const question = questions[index];
+      document.getElementById('nickname').value = question.nickname;
+      document.getElementById('title').value = question.title;
+      document.getElementById('question').value = question.text;
+      document.getElementById('privateCheckbox').checked = question.private;
+      isEditing = true;
+      editingIndex = index;
+    }
+
+    function deleteQuestion(index) {
+      const confirmation = confirm('정말 삭제하시겠습니까?');
+      if (confirmation) {
+        questions.splice(index, 1);
+        displayQuestions(); // Refresh the question list after deletion
+      }
+    }
+  </script>
+</body>
+</html>

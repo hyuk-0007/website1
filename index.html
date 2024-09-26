@@ -1,127 +1,282 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>스와이프 갤러리</title>
-	<link rel="icon" href="img/favicon.ico" type="image/x-icon">	
-	<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-	<link rel="stylesheet" href="css/style.css">	
-	<script src="https://kit.fontawesome.com/c47106c6a7.js" crossorigin="anonymous"></script>
-	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>키작은 꼬마 hyuk</title>
+  <style>
+    /* 네비게이션 바 */
+    .navbar {
+      background-color: #333;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: auto;
+      position: relative;
+    }
+
+    .clock {
+      font-size: 30px; /* 시계 크기 */
+      color: white;
+      margin-right: 20px;
+    }
+
+    .site-title {
+      color: white;
+      font-size: 30px;
+      margin-bottom: 10px;
+      font-family: 'Gothic', sans-serif;
+      display: flex;
+      align-items: center;
+    }
+
+    .main-menu {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      background-color: black;
+      width: 100%;
+      justify-content: center;
+      position: relative;
+    }
+
+    .menu-item {
+      position: relative;
+      margin-right: 20px;
+    }
+
+    .main-menu a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      display: block;
+    }
+
+    /* 드롭다운 메뉴 스타일 */
+    .dropdown-menu {
+      display: none; /* 기본적으로 숨김 */
+      position: absolute;
+      background-color: #444;
+      list-style-type: none;
+      padding: 10px 0;
+      margin: 0;
+      z-index: 1;
+      flex-direction: row; /* 가로로 배열 */
+      white-space: nowrap; /* 줄바꿈 방지 */
+    }
+
+    .dropdown-menu li {
+      padding: 3px 15px;
+    }
+
+    .dropdown-menu li a {
+      color: white;
+      display: block;
+    }
+
+    /* 드롭다운 표시 */
+    .menu-item:hover .dropdown-menu {
+      display: flex; /* 드롭다운 활성화 시 표시 */
+    }
+
+    /* 검색창 */
+    .search-box {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-input {
+      height: 30px;
+      width: 500px;
+      padding: 5px;
+      border: 1px solid black;
+      background-color: white;
+      color: black;
+      margin-right: 10px;
+    }
+
+    .search-button {
+      height: 30px;
+      padding: 5px 10px;
+      background-color: #444;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* 아이디 비밀번호 섹션 */
+    .login-section {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .login-input {
+      margin-bottom: 5px;
+      height: 30px;
+      background-color: white;
+      color: black;
+    }
+
+    /* 추가된 아이디/비밀번호 찾기 및 회원가입 링크 */
+    .login-options {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+    }
+
+    .login-options a {
+      color: white;
+      text-decoration: none;
+      margin-left: 10px;
+      font-size: 12px;
+    }
+
+    /* 신상품 섹션 */
+    .new-products {
+      padding: 20px;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .new-products h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .product-item {
+      display: inline-block;
+      margin: 10px 10px;
+      text-align: center;
+    }
+
+    .product-item img {
+      width: 150px;
+      height: 150px;
+    }
+
+    /* 태그 스타일 */
+    .tags {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .tag {
+      display: inline-block;
+      margin: 5px;
+      padding: 5px 10px;
+      background-color: #444;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+      document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    // 시계가 1초마다 업데이트되도록 설정
+    setInterval(updateClock, 1000);
+    window.onload = updateClock; // 페이지 로드 시 바로 시계 표시
+  </script>
 </head>
-<body>	
+<body>
 
-	<div class="wrap">
-		<h1>UI/UX <span>PORTFOLIO</span></h1>
+  <!-- 네비게이션 바 -->
+  <header>
+    <nav class="navbar">
+      <div class="site-title">
+        <div class="clock" id="clock"></div> <!-- 시계 -->
+        <p>홈페이지 사이트 이름</p>
+      </div>
+      <ul class="main-menu">
+        <li class="menu-item">
+          <a href="#" class="dropdown-toggle"><p>제품</p></a>
+          <ul class="dropdown-menu">
+            <li><a href="#"><p>의류</p></a></li>
+            <li><a href="#"><p>신발</p></a></li>
+            <li><a href="#"><p>악세사리</p></a></li>
+          </ul>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="dropdown-toggle"><p>브랜드</p></a>
+          <ul class="dropdown-menu">
+            <li><a href="#"><p>나이키</p></a></li>
+            <li><a href="#"><p>뉴발란스</p></a></li>
+            <li><a href="#"><p>아디다스</p></a></li>
+          </ul>
+        </li>
+        <li class="menu-item">
+          <a href="#"><p>상품후기</p></a>
+        </li>
+        <li class="menu-item">
+          <a href="qna.html"><p>Q&A</p></a> <!-- Q&A 페이지로 이동하는 링크 -->
+        </li>
+      </ul>
 
-		<ul class="auto">
-			<li class="btnStart"><i class="fas fa-play"></i></li>
-			<li class="btnStop"><i class="fas fa-pause"></i></li>
-		</ul>
+      <!-- 아이디 비밀번호 입력 및 옵션 -->
+      <div class="login-section">
+        <div class="login-options">
+          <a href="#">아이디 찾기</a>
+          <a href="#">비밀번호 찾기</a>
+          <a href="signup.html">회원가입</a>
+        </div>
+        <input type="text" class="login-input" placeholder="아이디" required>
+        <input type="password" class="login-input" placeholder="비밀번호" required>
+        <button type="submit" onclick="login()">로그인</button>
+      </div>
+    </nav>
+  </header>
 
-<div class="swiper-wrapper">
-	<div class="swiper-slide">
-		<div class="inner">
-			<div class="con">
-				<img src="img/pic1.png">
-				<h2>Ipsum dolor sit amet.</h2>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, optio.</p>
-			</div>
-		</div>
-	</div>
-	<div class="swiper-slide">
-		<div class="inner">
-			<div class="con">
-				<img src="img/pic2.png">
-				<h2>Lorem ipsum dolor.</h2>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati eum doloribus voluptate officiis excepturi!</p>
-			</div>
-		</div>
-	</div>
-	<div class="swiper-slide">
-		<div class="inner">
-			<div class="con">
-				<img src="img/pic3.png">
-				<h2>Dolor ipsum  sit.</h2>
-				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi officiis iste nam quae.</p>
-			</div>
-		</div>
-	</div>
-	<div class="swiper-slide">
-		<div class="inner">
-			<div class="con">
-				<img src="img/pic4.png">
-				<h2>Consectetur adicing.</h2>
-				<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit optio debitis sapiente!</p>
-			</div>
-		</div>
-	</div>
-	<div class="swiper-slide">
-		<div class="inner">
-			<div class="con">
-				<img src="img/pic5.png">
-				<h2>Dicta! elit. </h2>
-				<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eos, accusantium corrupti.</p>
-			</div>
-		</div>
-	</div>
-</div>
+  <!-- 검색창 -->
+  <div class="search-box">
+    <input type="text" class="search-input" placeholder="검색..." onkeyup="searchReviews()">
+    <button class="search-button" onclick="performSearch()">검색</button>
+  </div>
 
-		<!-- 좌우버튼 -->
-		<div class="swiper-button-next"></div>
-		<div class="swiper-button-prev"></div>
-		
-		<!-- 페이징 버튼 -->
-		<div class="swiper-pagination"></div>
-	</div>
+  <!-- 태그 섹션 -->
+  <div class="tags">
+    <span class="tag" onclick="filterProducts('청바지')">#청바지</span>
+    <span class="tag" onclick="filterProducts('티셔츠')">#티셔츠</span>
+    <span class="tag" onclick="filterProducts('신발')">#신발</span>
+    <span class="tag" onclick="filterProducts('구두')">#구두</span>
+    <span class="tag" onclick="filterProducts('악세사리')">#악세사리</span>
+    <span class="tag" onclick="filterProducts('슬렉스바지')">#슬렉스바지</span>
+  </div>
 
-	<script>
-		const swiper = new Swiper('.wrap',{	
-			direction: "horizontal",
-			loop: true,						
-			pagination: {
-				el: '.swiper-pagination',
-				type: 'fraction'
-			},	
-			navigation : {				
-				nextEl: '.swiper-button-next',
-				prevEl: '.swiper-button-prev',			
-			},
-			spaceBetween: 0,
-			slidesPerView: "auto",
-			grabCursor: true,
-			centeredSlides :true,
-			speed:1000,
-			effect:"coverflow",	
-			coverflowEffect: {
-				rotate: 50,
-				stretch: -100,
-				depth: 400,
-				modifier: 1,
-				slideShadows: false,
-			},
-			autoplay: {
-				delay:1000,		
-				disableOnInteraction : true
-			}	
-		});
-
-		// .btnStart 요소를 찾아서 btnStart에 저장
-		const btnStart = document.querySelector(".btnStart");
-		// .btnStop 요소를 찾아서 btnStop에 저장
-		const btnStop = document.querySelector(".btnStop");
-
-		//btnStart버튼을 클릭시 자동롤링 시작
-		btnStart.addEventListener("click",()=>{
-			swiper.autoplay.start();
-		});
-
-		//btnStart버튼을 클릭시 자동롤링 정지
-		btnStop.addEventListener("click",()=>{
-			swiper.autoplay.stop();
-		});
-	</script>	
-</body>
-</html>
+  <!-- 신상품 섹션 -->
+  <section class="new-products">
+    <h2>신상품</h2>
+    <div class="product-item" data-category="청바지">
+      <a href="product1.html">
+        <img src="https://via.placeholder.com/150" alt="상품 1">
+        <p>상품 1</p>
+      </a>
+    </div>
+    <div class="product-item" data-category="티셔츠">
+      <a href="product2.html">
+        <img src="https://via.placeholder.com/150" alt="상품 2">
+        <p>상품 2</p>
+      </a>
+    </div>
+    <div class="product-item" data-category="신발">
+      <a href="product3.html">
+        <img src="https://via.placeholder.com/150" alt="상품 3">
+        <p>상품3</p>
+    </div>
+  </body>
+  </html>
+  

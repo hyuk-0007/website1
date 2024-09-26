@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품 1 상세 페이지</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f1f1f1;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      margin-top: 50px;
+      display: flex;
+      flex-direction: row;
+      padding: 20px;
+    }
+
+    .product-image {
+      flex: 1;
+      text-align: center;
+    }
+
+    .product-image img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .product-image img:hover {
+      transform: scale(1.05);
+    }
+
+    .product-details {
+      flex: 2;
+      padding: 20px;
+    }
+
+    .product-details h1 {
+      font-size: 28px;
+      color: #333;
+      margin: 0;
+    }
+
+    .product-description {
+      margin: 20px 0;
+      font-size: 16px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .options {
+      margin-top: 20px;
+    }
+
+    .options label {
+      font-weight: bold;
+      margin-right: 10px;
+      color: #333;
+    }
+
+    .options select,
+    .options input {
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      width: 100%;
+      max-width: 200px;
+    }
+
+    .price {
+      font-size: 24px;
+      color: #e63946;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .button-container {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .button {
+      background-color: #e63946;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      flex: 1;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #d62839;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .button {
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="product-image">
+      <img src="images/abc.jpg" alt=" 슬랙스 바지">
+    </div>
+    <div class="product-details">
+      <h1>남성 슬랙스 바지</h1>
+      <div class="product-description">
+        <p>상품 1은 탁월한 품질과 스타일을 자랑합니다. 이 제품은 당신의 일상에 편안함과 세련됨을 더할 것입니다. 다양한 사이즈와 컬러 옵션으로 당신의 스타일에 맞추어 선택할 수 있습니다. 지금 바로 이 기회를 놓치지 마세요!</p>
+      </div>
+
+      <div class="options">
+        <div class="size">
+          <label for="size">사이즈:</label>
+          <select id="size">
+            <option value="s">S</option>
+            <option value="m">M</option>
+            <option value="l">L</option>
+            <option value="xl">XL</option>
+          </select>
+        </div>
+
+        <div class="color">
+          <label for="color">컬러:</label>
+          <select id="color">
+            <option value="red">빨간색</option>
+            <option value="blue">파란색</option>
+            <option value="green">초록색</option>
+          </select>
+        </div>
+
+        <div class="quantity">
+          <label for="quantity">수량:</label>
+          <input type="number" id="quantity" value="1" min="1" style="width: 50px;">
+        </div>
+      </div>
+
+      <div class="price">판매가: 29,900원</div>
+
+      <div class="button-container">
+        <button class="button">관심상품 추가</button>
+        <button class="button">장바구니 담기</button>
+        <button class="button">구매하기</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
